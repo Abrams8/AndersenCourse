@@ -1,16 +1,20 @@
 package com.abramchik.taskOnePatterns.behavioral.chainOfResponsibility;
 
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Notifier {
-    private int priority;
-    private Notifier nextNotifier;
 
-    public Notifier(int priority) {
-        this.priority = priority;
-    }
+    @NonNull
+    int priority;
 
-    public void setNextNotifier(Notifier nextNotifier) {
-        this.nextNotifier = nextNotifier;
-    }
+    @Setter
+    Notifier nextNotifier;
 
     public void notifyManager(String message, int level) {
         if (level >= priority) {

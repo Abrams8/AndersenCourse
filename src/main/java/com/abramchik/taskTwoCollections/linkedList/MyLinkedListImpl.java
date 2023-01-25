@@ -180,7 +180,9 @@ public class MyLinkedListImpl<T> implements MyLinkedList<T>, Iterable<T>, Descen
                 node = node.getNextElement();
             }
             return node;
-        } else throw new IndexOutOfBoundsException();
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     private void removeNode(Node<T> node) {

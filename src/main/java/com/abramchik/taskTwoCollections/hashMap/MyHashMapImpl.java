@@ -10,6 +10,9 @@ public class MyHashMapImpl<K, V> implements MyHashMap<K, V> {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final int HASH_TABLE_MULTIPLICATOR = 2;
+    private static final int HASH_FUNCTION_INITIAL_VALUE = 31;
+    private static final int HASH_FUNCTION_MULTIPLICATOR = 17;
 
     private Node<K, V>[] hashTable;
     private int size = 0;
@@ -22,8 +25,8 @@ public class MyHashMapImpl<K, V> implements MyHashMap<K, V> {
     }
 
     private int hash(K key) {
-        int hash = 31;
-        hash = hash * 17 * key.hashCode();
+        int hash = HASH_FUNCTION_INITIAL_VALUE;
+        hash = hash * HASH_FUNCTION_MULTIPLICATOR * key.hashCode();
         return Math.abs(hash % hashTable.length);
     }
 
@@ -59,7 +62,7 @@ public class MyHashMapImpl<K, V> implements MyHashMap<K, V> {
 
     private void arrayGrow() {
         Node<K, V>[] oldHashTable = hashTable;
-        hashTable = new Node[oldHashTable.length * 2];
+        hashTable = new Node[oldHashTable.length * HASH_TABLE_MULTIPLICATOR];
         size = 0;
         for (Node<K, V> node : oldHashTable) {
             if (node != null) {
@@ -214,8 +217,8 @@ public class MyHashMapImpl<K, V> implements MyHashMap<K, V> {
 
         @Override
         public int hashCode() {
-            int hash = 31;
-            hash = hash * 17 + key.hashCode();
+            int hash = HASH_FUNCTION_INITIAL_VALUE;
+            hash = hash * HASH_FUNCTION_MULTIPLICATOR + key.hashCode();
             return hash;
         }
 

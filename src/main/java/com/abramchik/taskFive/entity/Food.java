@@ -1,7 +1,10 @@
 package com.abramchik.taskFive.entity;
 
+import com.abramchik.taskFive.entity.currency.Currency;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -11,8 +14,8 @@ public class Food extends Product {
 
     boolean includesGMO;
 
-    public Food(int id, String name, Double price, boolean includesGMO) {
-        super(id, name, price);
+    public Food(int id, String name, BigDecimal price, boolean includesGMO, Currency currency) {
+        super(id, name, price, currency);
         this.includesGMO = includesGMO;
     }
 
@@ -23,6 +26,7 @@ public class Food extends Product {
                 "\n ID - " + super.getId() +
                 "\n name - " + super.getName() +
                 "\n price - " + super.getPrice() +
+                "\n currency - " + super.getCurrency().getName() +
                 "\n includesGMO - " + includesGMO;
     }
 }

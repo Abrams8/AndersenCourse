@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.log4j.Logger;
 
+import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,10 @@ public class BucketServiceImpl implements BucketService {
             log.info("Wrong product number!");
             return false;
         } else {
+            product.setPrice(product.getPrice()
+                    .multiply(BigDecimal.valueOf(product.getCurrency().getCourse()))
+                    .multiply(BigDecimal.valueOf(product.getCurrency().getMultiplier())));
+            product.getCurrency().setUAHCurrency();
             bucketList.add(product);
             bucketSize++;
             log.info(product.getName() + " has been added to the bucket!");
@@ -85,5 +91,27 @@ public class BucketServiceImpl implements BucketService {
     public String toString() {
         return "Products in the bucket: \n" + bucketList;
     }
-}
 
+    @Override
+    public void saveBucketToFile() {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("D:\\bucket.txt"));
+            oos.writeObject(bucketList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void readBucketFromFile() {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("D:\\bucket.txt"));
+            this.bucketList = (List<Product>) ois.readObject();
+            this.bucketSize = bucketList.size();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.info("Bucket not found ");
+        }
+    }
+}

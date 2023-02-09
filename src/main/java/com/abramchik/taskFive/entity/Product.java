@@ -1,14 +1,42 @@
 package com.abramchik.taskFive.entity;
 
+import com.abramchik.taskFive.entity.currency.Currency;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Objects;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Product {
+public class Product implements Serializable {
     int id;
     String name;
-    Double price;
+    BigDecimal price;
+    Currency currency;
+
+    @ExpireDate
+    int expDays;
+
+    public Product(int id, String name, BigDecimal price, Currency currency) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.currency = currency;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id && Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

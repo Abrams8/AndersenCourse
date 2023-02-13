@@ -1,7 +1,10 @@
 package com.abramchik.taskFive.entity;
 
+import com.abramchik.taskFive.entity.currency.Currency;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -11,8 +14,8 @@ public class NotFood extends Product{
 
     int warrantyPeriod;
 
-    public NotFood(int id, String name, Double price, int warrantyPeriod) {
-        super(id, name, price);
+    public NotFood(int id, String name, BigDecimal price, int warrantyPeriod, Currency currency) {
+        super(id, name, price, currency);
         this.warrantyPeriod = warrantyPeriod;
     }
 
@@ -23,6 +26,7 @@ public class NotFood extends Product{
                 "\n ID - " + super.getId() +
                 "\n name - " + super.getName() +
                 "\n price - " +super.getPrice() +
+                "\n currency - " + super.getCurrency().getName() +
                 "\n warranty period - " + warrantyPeriod;
     }
 }

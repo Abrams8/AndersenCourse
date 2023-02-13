@@ -2,6 +2,8 @@ package com.abramchik.shop;
 
 import com.abramchik.taskFive.entity.NotFood;
 import com.abramchik.taskFive.entity.Product;
+import com.abramchik.taskFive.entity.currency.Currency;
+import com.abramchik.taskFive.entity.currency.InternationalCode;
 import com.abramchik.taskFive.service.BucketService;
 import com.abramchik.taskFive.service.BucketServiceImpl;
 import com.abramchik.taskFive.service.ProductService;
@@ -12,6 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopTest {
 
@@ -21,7 +25,7 @@ public class ShopTest {
 
     @Before
     public void initial() {
-        product = new NotFood(8, "Printer", 150.9, 6);
+        product = new NotFood(8, "Printer", BigDecimal.valueOf(150.9), 6, new Currency(InternationalCode.USD));
     }
 
     @Test

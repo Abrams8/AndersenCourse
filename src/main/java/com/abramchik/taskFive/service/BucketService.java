@@ -16,4 +16,8 @@ public interface BucketService {
 
     int getBucketSize();
 
+    void readBucketFromFile();
+
+    void saveBucketToFile();
+
 }

@@ -1,6 +1,11 @@
-package com.abramchik.taskFive.service;
+package com.abramchik.taskFive.service.impl;
 
+import com.abramchik.taskFive.dao.BucketDAO;
+import com.abramchik.taskFive.dao.impl.BucketDAOImpl;
 import com.abramchik.taskFive.entity.Product;
+import com.abramchik.taskFive.entity.User;
+import com.abramchik.taskFive.service.BucketService;
+import com.abramchik.taskFive.service.ProductService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.log4j.Logger;
@@ -15,6 +20,7 @@ public class BucketServiceImpl implements BucketService {
 
     static final Logger log = Logger.getLogger(BucketServiceImpl.class);
 
+    BucketDAO bucketDAO = new BucketDAOImpl();
     List<Product> bucketList = new ArrayList<>();
     ProductService productService = new ProductServiceImpl();
     int bucketSize = 0;
@@ -100,6 +106,11 @@ public class BucketServiceImpl implements BucketService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean addProductToBucketDB(Product product, User user) {
+        return bucketDAO.addProductToBucket(product, user);
     }
 
     @Override

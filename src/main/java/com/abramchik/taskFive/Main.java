@@ -10,10 +10,7 @@ import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 

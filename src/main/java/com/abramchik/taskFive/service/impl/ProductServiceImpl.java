@@ -1,10 +1,11 @@
-package com.abramchik.taskFive.service;
+package com.abramchik.taskFive.service.impl;
 
 import com.abramchik.taskFive.entity.Food;
 import com.abramchik.taskFive.entity.NotFood;
 import com.abramchik.taskFive.entity.Product;
 import com.abramchik.taskFive.entity.currency.Currency;
 import com.abramchik.taskFive.entity.currency.InternationalCode;
+import com.abramchik.taskFive.service.ProductService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

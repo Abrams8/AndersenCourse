@@ -3,7 +3,6 @@ package com.abramchik.taskFive.entity;
 import com.abramchik.taskFive.entity.currency.Currency;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 
 @Getter

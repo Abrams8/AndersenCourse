@@ -1,6 +1,7 @@
 package com.abramchik.taskFive.service;
 
 import com.abramchik.taskFive.entity.Product;
+import com.abramchik.taskFive.entity.User;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface BucketService {
     void readBucketFromFile();
 
     void saveBucketToFile();
+
+    boolean addProductToBucketDB(Product product, User user);
 
 }

@@ -1,0 +1,5 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InfoUser`(IN var1 int)
+BEGIN
+SELECT orders_id, orders.date, orders.sum AS sum FROM shop.orders, shop.users WHERE user_id = var1
+and buckets_bucket_id = var1;
+END

@@ -1,8 +1,10 @@
-package com.abramchik.taskFive.service;
+package com.abramchik.taskFive.service.impl;
 
 import com.abramchik.taskFive.entity.ExpireDate;
 import com.abramchik.taskFive.entity.Food;
 import com.abramchik.taskFive.entity.Product;
+import com.abramchik.taskFive.service.ProductService;
+import com.abramchik.taskFive.service.WarehouseService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.log4j.Logger;

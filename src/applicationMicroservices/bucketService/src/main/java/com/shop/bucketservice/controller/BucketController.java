@@ -16,22 +16,27 @@ public class BucketController {
     BucketService bucketService = new BucketServiceImpl();
 
     @GetMapping
-    public List<Bucket> getAllBuckets(){
+    public List<Bucket> getAllBuckets() {
         return bucketService.getAllBuckets();
     }
 
     @PostMapping("/add")
-    public boolean addProductToBucket(@RequestBody Bucket bucket){
-        return bucketService.addProductToTheBucket(bucket);
+    public void addProductToBucket(@RequestBody Bucket bucket) {
+        bucketService.addProductToTheBucket(bucket);
     }
 
     @DeleteMapping("/delete")
-    public boolean deleteProductFromBucket(@RequestBody Bucket bucket){
-        return bucketService.deleteProductFromTheBucket(bucket);
+    public void deleteProductFromBucket(@RequestBody Bucket bucket) {
+        bucketService.deleteProductFromTheBucket(bucket);
     }
 
     @DeleteMapping("/clear")
-    public boolean clearBucket(@RequestParam int bucketId){
-        return bucketService.clearBucket(bucketId);
+    public void clearBucket(@RequestParam int bucketId) {
+        bucketService.clearBucket(bucketId);
+    }
+
+    @PostMapping("/makeOrder")
+    public void makeOrder(@RequestParam int bucketId) {
+        bucketService.makeOrder(bucketId);
     }
 }

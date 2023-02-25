@@ -17,4 +17,8 @@ public class Bucket {
         this.bucketId = bucketId;
         this.productId = productId;
     }
+
+    public Bucket(int bucketId) {
+        this.bucketId = bucketId;
+    }
 }

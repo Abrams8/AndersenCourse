@@ -6,6 +6,8 @@ import com.shop.bucketservice.entity.Bucket;
 import com.shop.bucketservice.service.BucketService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +18,35 @@ public class BucketServiceImpl implements BucketService {
 
     BucketDAO bucketDAO = new BucketDAOImpl();
 
+    @Autowired
+    KafkaTemplate<String, Bucket> kafkaTemplate;
+
     @Override
     public List<Bucket> getAllBuckets() {
         return bucketDAO.getAllBuckets();
     }
 
     @Override
-    public boolean addProductToTheBucket(Bucket bucket) {
-        return bucketDAO.addProductToTheBucket(bucket);
+    public void addProductToTheBucket(Bucket bucket) {
+        kafkaTemplate.send("addProduct", bucket);
     }
 
     @Override
-    public boolean deleteProductFromTheBucket(Bucket bucket) {
-        return bucketDAO.deleteProductFromTheBucket(bucket);
+    public void deleteProductFromTheBucket(Bucket bucket) {
+        kafkaTemplate.send("delete", bucket);
     }
 
     @Override
-    public boolean clearBucket(int bucketId) {
-        return bucketDAO.clearBucket(bucketId);
+    public void clearBucket(int bucketId) {
+        Bucket bucket = new Bucket();
+        bucket.setBucketId(bucketId);
+        kafkaTemplate.send("clear", bucket);
+    }
+
+    @Override
+    public void makeOrder(int bucketId){
+        Bucket bucket = new Bucket();
+        bucket.setBucketId(bucketId);
+        kafkaTemplate.send("makeOrder", bucket);
     }
 }

@@ -8,9 +8,11 @@ public interface BucketService {
 
     List<Bucket> getAllBuckets();
 
-    boolean addProductToTheBucket(Bucket bucket);
+    void addProductToTheBucket(Bucket bucket);
 
-    boolean deleteProductFromTheBucket(Bucket bucket);
+    void deleteProductFromTheBucket(Bucket bucket);
 
-    boolean clearBucket(int bucketId);
+    void clearBucket(int bucketId);
+
+    void makeOrder(int bucketId);
 }

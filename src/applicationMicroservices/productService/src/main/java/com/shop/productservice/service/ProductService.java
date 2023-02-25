@@ -1,6 +1,8 @@
 package com.shop.productservice.service;
 
 import com.shop.productservice.entity.Product;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -10,5 +12,7 @@ public interface ProductService {
     Product getProduct(int id);
 
     List<Product> getAllProducts();
+
+    BigDecimal getProductPrice(int id);
 
 }

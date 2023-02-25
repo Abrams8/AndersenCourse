@@ -8,6 +8,7 @@ import com.shop.productservice.entity.Product;
 import com.shop.productservice.entity.currency.Currency;
 import com.shop.productservice.entity.currency.InternationalCode;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String ADD_NEW_PRODUCT = "INSERT INTO shop.products(product_id, name, price, currency, exp_days, food_food_id, notfood_notfood_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_PRODUCT_BY_ID = "SELECT * FROM shop.products left join shop.foods ON food_food_id = food_id left join shop.notfoods ON notfood_notfood_id = notfood_id where product_id = ?;";
     private static final String GET_ALL_PRODUCTS = "SELECT * FROM shop.products left join shop.foods ON food_food_id = food_id left join shop.notfoods ON notfood_notfood_id = notfood_id;";
+    private static final String GET_PRODUCT_PRICE = "SELECT price FROM products WHERE product_id = ?;";
 
     @Override
     public boolean addProduct(Product product) {
@@ -171,5 +173,33 @@ public class ProductDAOImpl implements ProductDAO {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    @Override
+    public BigDecimal getProductPrice(int id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        BigDecimal sum = null;
+        try {
+            connection = MyConnection.getRealConnection();
+            preparedStatement = connection.prepareStatement(GET_PRODUCT_PRICE);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                sum = resultSet.getBigDecimal("price");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return sum;
+        }
     }
 }

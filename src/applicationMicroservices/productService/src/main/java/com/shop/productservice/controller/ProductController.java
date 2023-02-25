@@ -7,6 +7,7 @@ import com.shop.productservice.service.ProductService;
 import com.shop.productservice.service.impl.ProductServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -32,5 +33,10 @@ public class ProductController {
     @PostMapping("/create/notfood")
     public void addNewNotFood(@RequestBody NotFood product){
         productService.addNewProduct(product);
+    }
+
+    @GetMapping("/get/price")
+    public BigDecimal getProductPrice(@RequestParam int productId){
+        return productService.getProductPrice(productId);
     }
 }

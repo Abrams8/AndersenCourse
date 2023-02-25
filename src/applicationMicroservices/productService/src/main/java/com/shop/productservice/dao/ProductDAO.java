@@ -2,6 +2,7 @@ package com.shop.productservice.dao;
 
 import com.shop.productservice.entity.Product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductDAO {
@@ -11,4 +12,6 @@ public interface ProductDAO {
     Product getProduct(int id);
 
     List<Product> getAllProducts();
+
+    BigDecimal getProductPrice(int id);
 }

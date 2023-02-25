@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -32,6 +33,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllProducts() {
         return productDAO.getAllProducts();
+    }
+
+    @Override
+    public BigDecimal getProductPrice(int id) {
+        return productDAO.getProductPrice(id);
     }
 }
 

@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         return orderDAO.getAllOrders();
     }
 
-    @KafkaListener(topics = "makeOrder", groupId = "message_group_id")
+    @KafkaListener(topics = "makeOrder", groupId = "orders")
     public void makeOrder(Bucket bucket) {
         List<Integer> productList = orders.get(bucket.getBucketId());
         BigDecimal sum = BigDecimal.valueOf(0);
@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         clearCommonBucket(bucket);
     }
 
-    @KafkaListener(topics = "addProduct", groupId = "message_group_id")
+    @KafkaListener(topics = "addProduct", groupId = "orders")
     public void addProductToCommonBucket(Bucket bucket) {
         Integer userId = bucket.getBucketId();
         Integer productId = bucket.getProductId();;
@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         System.out.println(orders);
     }
 
-    @KafkaListener(topics = "delete", groupId = "message_group_id")
+    @KafkaListener(topics = "delete", groupId = "orders")
     public void deleteProductFromCommonBucket(Bucket bucket) {
         Integer userId = bucket.getBucketId();
         Integer productId = bucket.getProductId();
@@ -85,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
         System.out.println(orders);
     }
 
-    @KafkaListener(topics = "clear", groupId = "message_group_id")
+    @KafkaListener(topics = "clear", groupId = "orders")
     public void clearCommonBucket(Bucket bucket) {
         int userId = bucket.getBucketId();
         if(orders.containsKey(userId)){

@@ -1,19 +1,22 @@
 package com.shop.userservice.dao;
 
-import com.shop.userservice.entity.User;
+import com.shop.userservice.entity.Users;
 import com.shop.userservice.entity.UserHistoryOfPurchasing;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface UserDAO {
 
-    boolean createNewUser(User user);
+    boolean createNewUser(Users user);
 
-    User getUserByNameAndSurname(User user);
-
-    User getUserById(int id);
+    Users getUserById(int id);
 
     List<UserHistoryOfPurchasing> callStoredProcedureTradesInfoByUserId(int userId);
 
-    List<User> getAllUsers();
+    List<Users> getAllUsers();
+
+    Users findUserByUserName(String userName);
+
+    UserDetails loadUserByUsername(String username);
 }

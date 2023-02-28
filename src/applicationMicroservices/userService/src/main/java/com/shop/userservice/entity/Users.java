@@ -10,16 +10,14 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Users {
 
     int id;
+    String userName;
+    String password;
 
-    String name;
-
-    String surname;
-
-    public User(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
+    public Users(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 }

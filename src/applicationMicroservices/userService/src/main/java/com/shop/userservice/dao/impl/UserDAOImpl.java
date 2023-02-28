@@ -2,22 +2,29 @@ package com.shop.userservice.dao.impl;
 
 import com.shop.userservice.dao.MyConnection;
 import com.shop.userservice.dao.UserDAO;
-import com.shop.userservice.entity.User;
 import com.shop.userservice.entity.UserHistoryOfPurchasing;
+import com.shop.userservice.entity.Users;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public class UserDAOImpl implements UserDAO {
-    private static final String CREATE_NEW_USER = "INSERT INTO users(user_name, user_surname) VALUES (?,?);";
-    private static final String GET_USER_BY_NAME_AND_SURNAME = "SELECT * FROM users WHERE user_name = ? and user_surname = ?;";
+    private static final String CREATE_NEW_USER = "INSERT INTO users(user_name, password) VALUES (?,?);";
     private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?;";
     private static final String STORED_PROCEDURE = "call TradesInfo(?);";
     private static final String GET_ALL_USERS = "SELECT * FROM users;";
+    private static final String FIND_USER_BY_USER_NAME = "SELECT * FROM shop.users WHERE user_name = ?;";
 
     @Override
-    public boolean createNewUser(User user) {
+    public boolean createNewUser(Users user) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         boolean result;
@@ -25,8 +32,8 @@ public class UserDAOImpl implements UserDAO {
             connection = MyConnection.getRealConnection();
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(CREATE_NEW_USER);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getSurname());
+            preparedStatement.setString(1, user.getUserName());
+            preparedStatement.setString(2, user.getPassword());
             preparedStatement.executeUpdate();
             connection.commit();
             result = true;
@@ -49,53 +56,21 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByNameAndSurname(User user) {
+    public Users getUserById(int id) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        User result = null;
-        try {
-            connection = MyConnection.getRealConnection();
-            preparedStatement = connection.prepareStatement(GET_USER_BY_NAME_AND_SURNAME);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getSurname());
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                result = new User();
-                result.setId(resultSet.getInt("user_id"));
-                result.setName(resultSet.getString("user_name"));
-                result.setSurname(resultSet.getString("user_surname"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                resultSet.close();
-                preparedStatement.close();
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            return result;
-        }
-    }
-
-    @Override
-    public User getUserById(int id) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        User user = null;
+        Users user = null;
         try {
             connection = MyConnection.getRealConnection();
             preparedStatement = connection.prepareStatement(GET_USER_BY_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user = new User();
+                user = new Users();
                 user.setId(resultSet.getInt("user_id"));
-                user.setName(resultSet.getString("user_name"));
-                user.setSurname(resultSet.getString("user_surname"));
+                user.setUserName(resultSet.getString("user_name"));
+                user.setPassword(resultSet.getString("password"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -136,20 +111,20 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<Users> getAllUsers() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        List<User> list = new ArrayList<>();
+        List<Users> list = new ArrayList<>();
         try {
             connection = MyConnection.getRealConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(GET_ALL_USERS);
             while (resultSet.next()){
-                User user = new User();
+                Users user = new Users();
                 user.setId(resultSet.getInt("user_id"));
-                user.setName(resultSet.getString("user_name"));
-                user.setSurname(resultSet.getString("user_surname"));
+                user.setUserName(resultSet.getString("user_name"));
+                user.setPassword(resultSet.getString("password"));
                 list.add(user);
             }
 
@@ -157,5 +132,46 @@ public class UserDAOImpl implements UserDAO {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    @Override
+    public Users findUserByUserName(String userName) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Users user = null;
+        try {
+            connection = MyConnection.getRealConnection();
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_USER_NAME);
+            preparedStatement.setString(1, userName);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = new Users();
+                user.setId(resultSet.getInt("user_id"));
+                user.setUserName(resultSet.getString("user_name"));
+                user.setPassword(resultSet.getString("password"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return user;
+        }
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Users user = findUserByUserName(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("user"));
+        return new User(user.getUserName(), user.getPassword(), authorities);
     }
 }

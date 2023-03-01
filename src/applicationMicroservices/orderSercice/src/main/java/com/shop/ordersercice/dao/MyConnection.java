@@ -1,13 +1,29 @@
 package com.shop.ordersercice.dao;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Component
 public class MyConnection {
-    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/shop";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "1111";
+    private static String DB_URL;
+    private static String DB_USER;
+    private static String DB_PASSWORD;
+
+    @Value("${database.url}")
+    private void setDbUrl(String dbUrl) {
+        DB_URL = dbUrl;
+    }
+    @Value("${database.username}")
+    private void setDbUser(String dbUser) {
+        DB_USER = dbUser;
+    }
+    @Value("${database.password}")
+    private void setDbPassword(String dbPassword) {
+        DB_PASSWORD = dbPassword;
+    }
 
     public static Connection getRealConnection() {
         try {

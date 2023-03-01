@@ -3,6 +3,7 @@ package com.shop.userservice.dao.impl;
 import com.shop.userservice.dao.MyConnection;
 import com.shop.userservice.dao.UserDAO;
 import com.shop.userservice.entity.UserHistoryOfPurchasing;
+import com.shop.userservice.entity.UserRole;
 import com.shop.userservice.entity.Users;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,10 +19,10 @@ import java.util.List;
 @Repository
 public class UserDAOImpl implements UserDAO {
     private static final String CREATE_NEW_USER = "INSERT INTO users(user_name, password) VALUES (?,?);";
-    private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?;";
+    private static final String GET_USER_BY_ID = "SELECT * FROM shop.users, shop.user_roles WHERE user_id = ? and users.user_roles_id = user_roles.id_user_roles;";
     private static final String STORED_PROCEDURE = "call TradesInfo(?);";
-    private static final String GET_ALL_USERS = "SELECT * FROM users;";
-    private static final String FIND_USER_BY_USER_NAME = "SELECT * FROM shop.users WHERE user_name = ?;";
+    private static final String GET_ALL_USERS = "SELECT * FROM shop.users, shop.user_roles WHERE users.user_roles_id = user_roles.id_user_roles;";
+    private static final String FIND_USER_BY_USER_NAME = "SELECT * FROM shop.users, shop.user_roles WHERE user_name = ? and users.user_roles_id = user_roles.id_user_roles;";
 
     @Override
     public boolean createNewUser(Users user) {
@@ -71,6 +72,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setId(resultSet.getInt("user_id"));
                 user.setUserName(resultSet.getString("user_name"));
                 user.setPassword(resultSet.getString("password"));
+                user.setUserRole(setRole(resultSet.getString("role")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -125,6 +127,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setId(resultSet.getInt("user_id"));
                 user.setUserName(resultSet.getString("user_name"));
                 user.setPassword(resultSet.getString("password"));
+                user.setUserRole(setRole(resultSet.getString("role")));
                 list.add(user);
             }
 
@@ -150,6 +153,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setId(resultSet.getInt("user_id"));
                 user.setUserName(resultSet.getString("user_name"));
                 user.setPassword(resultSet.getString("password"));
+                user.setUserRole(setRole(resultSet.getString("role")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -171,7 +175,17 @@ public class UserDAOImpl implements UserDAO {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("user"));
+        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(user.getUserRole().toString()));
         return new User(user.getUserName(), user.getPassword(), authorities);
+    }
+
+    private UserRole setRole(String role) {
+        UserRole userRole = null;
+        switch (role) {
+            case "USER" -> userRole = UserRole.USER;
+            case "MANAGER" -> userRole = UserRole.MANAGER;
+            case "ADMIN" -> userRole = UserRole.ADMIN;
+        }
+        return userRole;
     }
 }

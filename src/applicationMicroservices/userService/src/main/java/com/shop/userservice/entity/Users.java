@@ -15,9 +15,11 @@ public class Users {
     int id;
     String userName;
     String password;
+    UserRole userRole;
 
     public Users(String userName, String password) {
         this.userName = userName;
         this.password = password;
+        this.userRole = UserRole.USER;
     }
 }

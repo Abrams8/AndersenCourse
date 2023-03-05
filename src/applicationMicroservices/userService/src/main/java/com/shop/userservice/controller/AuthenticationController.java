@@ -8,13 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -44,6 +46,18 @@ public class AuthenticationController {
         final UserDetails user = userService.loadUserByUsername(newUser.getUserName());
         return ResponseEntity.ok(jwtUtils.generateToken(user));
 
+    }
+
+    @GetMapping("/check")
+    private Map<String, String> checkAccess() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        Map<String, String> user = new HashMap<>();
+        String username = principal.getUsername();
+        String role = principal.getAuthorities().stream().findFirst().get().getAuthority();
+        user.put(username, role);
+        return user;
     }
 
 }

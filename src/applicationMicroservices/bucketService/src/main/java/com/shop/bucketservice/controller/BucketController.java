@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/buckets")
+@RequestMapping("/api/v1/buckets")
 public class BucketController {
 
     @Autowired

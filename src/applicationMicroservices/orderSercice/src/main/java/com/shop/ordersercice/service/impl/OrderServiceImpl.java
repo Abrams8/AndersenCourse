@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             HttpUriRequest httpGet = RequestBuilder.get()
-                    .setUri(new URI("http://localhost:8082/products/get/price"))
+                    .setUri(new URI("http://localhost:8082/api/v1/products/get/price"))
                     .addParameter("productId", String.valueOf(productId))
                     .build();
 

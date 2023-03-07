@@ -3,6 +3,7 @@ package com.shop.ordersercice.controller;
 import com.shop.ordersercice.entity.Order;
 import com.shop.ordersercice.service.OrderService;
 import com.shop.ordersercice.service.impl.OrderServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,18 +14,27 @@ public class OrderController {
     OrderService orderService = new OrderServiceImpl();
 
     @GetMapping()
-    public List<Order> getAllOrders(){
-        return orderService.getAllOrders();
+    public ResponseEntity<List<Order>> getAllOrders(@RequestHeader String role){
+        if (role.equals("USER")){
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @PostMapping("/make")
-    public boolean makeOrder(@RequestBody Order order){
-        return orderService.makeOrder(order);
+    public ResponseEntity<Boolean> makeOrder(@RequestBody Order order, @RequestHeader String role){
+        if (role.equals("USER")){
+            return ResponseEntity.status(404).body(false);
+        }
+        return ResponseEntity.ok(orderService.makeOrder(order));
     }
 
     @PutMapping("/confirme")
-    public boolean confirmeOrder(@RequestParam int id){
-        return orderService.confirmeOrder(id);
+    public ResponseEntity<Boolean> confirmeOrder(@RequestParam int id, @RequestHeader String role){
+        if (role.equals("USER")){
+            return ResponseEntity.status(404).body(false);
+        }
+        return ResponseEntity.ok(orderService.confirmeOrder(id));
     }
 
 }

@@ -19,4 +19,6 @@ public interface UserService {
     Users findUserByUserName(String userName);
 
     UserDetails loadUserByUsername(String username);
+
+    Users validateToken(String token);
 }

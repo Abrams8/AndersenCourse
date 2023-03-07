@@ -4,6 +4,7 @@ import com.shop.bucketservice.entity.Bucket;
 import com.shop.bucketservice.service.BucketService;
 import com.shop.bucketservice.service.impl.BucketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +17,50 @@ public class BucketController {
     BucketService bucketService = new BucketServiceImpl();
 
     @GetMapping
-    public List<Bucket> getAllBuckets() {
-        return bucketService.getAllBuckets();
+    public ResponseEntity<List<Bucket>> getAllBuckets(@RequestHeader String role) {
+        if(role.equals("USER")){
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.ok(bucketService.getAllBuckets());
     }
 
     @PostMapping("/add")
-    public void addProductToBucket(@RequestBody Bucket bucket) {
-        bucketService.addProductToTheBucket(bucket);
+    public ResponseEntity<String> addProductToBucket(@RequestBody Bucket bucket, @RequestHeader String role) {
+        if(role.equals("USER")){
+            bucketService.addProductToTheBucket(bucket);
+            return ResponseEntity.ok("done");
+        } else {
+            return ResponseEntity.status(404).body("error");
+        }
     }
 
     @DeleteMapping("/delete")
-    public void deleteProductFromBucket(@RequestBody Bucket bucket) {
-        bucketService.deleteProductFromTheBucket(bucket);
+    public ResponseEntity<String> deleteProductFromBucket(@RequestBody Bucket bucket, @RequestHeader String role) {
+        if(role.equals("USER")){
+            bucketService.deleteProductFromTheBucket(bucket);
+            return ResponseEntity.ok("done");
+        } else {
+            return ResponseEntity.status(404).body("error");
+        }
     }
 
     @DeleteMapping("/clear")
-    public void clearBucket(@RequestParam int bucketId) {
-        bucketService.clearBucket(bucketId);
+    public ResponseEntity<String> clearBucket(@RequestParam int bucketId, @RequestHeader String role) {
+        if(role.equals("USER")){
+            bucketService.clearBucket(bucketId);
+            return ResponseEntity.ok("done");
+        } else {
+            return ResponseEntity.status(404).body("error");
+        }
     }
 
     @PostMapping("/makeOrder")
-    public void makeOrder(@RequestParam int bucketId) {
-        bucketService.makeOrder(bucketId);
+    public ResponseEntity<String> makeOrder(@RequestParam int bucketId, @RequestHeader String role) {
+        if(role.equals("USER")){
+            bucketService.makeOrder(bucketId);
+            return ResponseEntity.ok("done");
+        } else {
+            return ResponseEntity.status(404).body("error");
+        }
     }
 }

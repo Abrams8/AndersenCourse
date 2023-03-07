@@ -5,6 +5,7 @@ import com.shop.productservice.entity.NotFood;
 import com.shop.productservice.entity.Product;
 import com.shop.productservice.service.ProductService;
 import com.shop.productservice.service.impl.ProductServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -16,27 +17,35 @@ public class ProductController {
     ProductService productService = new ProductServiceImpl();
 
     @GetMapping()
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/get")
-    public Product getProduct(@RequestParam int id){
-        return productService.getProduct(id);
+    public ResponseEntity<Product> getProduct(@RequestParam int id){
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @PostMapping("/create/food")
-    public void addNewFood(@RequestBody Food product){
+    public ResponseEntity<String> addNewFood(@RequestBody Food product, @RequestHeader String role){
+        if (role.equals("USER")){
+            return ResponseEntity.status(404).body("error");
+        }
         productService.addNewProduct(product);
+        return ResponseEntity.status(200).body("done");
     }
 
     @PostMapping("/create/notfood")
-    public void addNewNotFood(@RequestBody NotFood product){
+    public ResponseEntity<String> addNewNotFood(@RequestBody NotFood product, @RequestHeader String role){
+        if (role.equals("USER")){
+            return ResponseEntity.status(404).body("error");
+        }
         productService.addNewProduct(product);
+        return ResponseEntity.status(200).body("done");
     }
 
     @GetMapping("/get/price")
-    public BigDecimal getProductPrice(@RequestParam int productId){
-        return productService.getProductPrice(productId);
+    public ResponseEntity<BigDecimal> getProductPrice(@RequestParam int productId){
+        return ResponseEntity.ok(productService.getProductPrice(productId));
     }
 }

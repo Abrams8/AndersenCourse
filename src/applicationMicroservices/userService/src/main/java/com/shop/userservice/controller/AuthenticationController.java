@@ -8,15 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -48,16 +43,8 @@ public class AuthenticationController {
 
     }
 
-    @GetMapping("/check")
-    private Map<String, String> checkAccess() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        Map<String, String> user = new HashMap<>();
-        String username = principal.getUsername();
-        String role = principal.getAuthorities().stream().findFirst().get().getAuthority();
-        user.put(username, role);
-        return user;
+    @PostMapping("/validateToken")
+    public ResponseEntity<Users> validate(@RequestParam String token) {
+        return ResponseEntity.ok(userService.validateToken(token));
     }
-
 }

@@ -5,38 +5,50 @@ import com.shop.productservice.entity.NotFood;
 import com.shop.productservice.entity.Product;
 import com.shop.productservice.service.ProductService;
 import com.shop.productservice.service.impl.ProductServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
+
+    private static final String USER = "USER";
+
     ProductService productService = new ProductServiceImpl();
 
     @GetMapping()
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/get")
-    public Product getProduct(@RequestParam int id){
-        return productService.getProduct(id);
+    @GetMapping("/product")
+    public ResponseEntity<Product> getProduct(@RequestParam int id){
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
-    @PostMapping("/create/food")
-    public void addNewFood(@RequestBody Food product){
+    @PostMapping("/product/food")
+    public ResponseEntity<String> addNewFood(@RequestBody Food product, @RequestHeader String role){
+        if (USER.equals(role)){
+            return ResponseEntity.status(404).body("Access error");
+        }
         productService.addNewProduct(product);
+        return ResponseEntity.status(200).body("New product has been added");
     }
 
-    @PostMapping("/create/notfood")
-    public void addNewNotFood(@RequestBody NotFood product){
+    @PostMapping("/product/notfood")
+    public ResponseEntity<String> addNewNotFood(@RequestBody NotFood product, @RequestHeader String role){
+        if (USER.equals(role)){
+            return ResponseEntity.status(404).body("Access error");
+        }
         productService.addNewProduct(product);
+        return ResponseEntity.status(200).body("New product has been added");
     }
 
-    @GetMapping("/get/price")
-    public BigDecimal getProductPrice(@RequestParam int productId){
-        return productService.getProductPrice(productId);
+    @GetMapping("/product/price")
+    public ResponseEntity<BigDecimal> getProductPrice(@RequestParam int productId){
+        return ResponseEntity.ok(productService.getProductPrice(productId));
     }
 }

@@ -6,10 +6,9 @@ import com.shop.productservice.entity.Product;
 import com.shop.productservice.service.ProductService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 

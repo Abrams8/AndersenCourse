@@ -21,7 +21,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/get")
+    @GetMapping("/user")
     public Users getUserByNameAndSurname(@RequestParam String userName) {
         return userService.findUserByUserName(userName);
     }

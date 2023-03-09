@@ -14,6 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
+
+    private static final String USER = "USER";
+
     ProductService productService = new ProductServiceImpl();
 
     @GetMapping()
@@ -21,30 +24,30 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/get")
+    @GetMapping("/product")
     public ResponseEntity<Product> getProduct(@RequestParam int id){
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
-    @PostMapping("/create/food")
+    @PostMapping("/product/food")
     public ResponseEntity<String> addNewFood(@RequestBody Food product, @RequestHeader String role){
-        if (role.equals("USER")){
-            return ResponseEntity.status(404).body("error");
+        if (USER.equals(role)){
+            return ResponseEntity.status(404).body("Access error");
         }
         productService.addNewProduct(product);
-        return ResponseEntity.status(200).body("done");
+        return ResponseEntity.status(200).body("New product has been added");
     }
 
-    @PostMapping("/create/notfood")
+    @PostMapping("/product/notfood")
     public ResponseEntity<String> addNewNotFood(@RequestBody NotFood product, @RequestHeader String role){
-        if (role.equals("USER")){
-            return ResponseEntity.status(404).body("error");
+        if (USER.equals(role)){
+            return ResponseEntity.status(404).body("Access error");
         }
         productService.addNewProduct(product);
-        return ResponseEntity.status(200).body("done");
+        return ResponseEntity.status(200).body("New product has been added");
     }
 
-    @GetMapping("/get/price")
+    @GetMapping("/product/price")
     public ResponseEntity<BigDecimal> getProductPrice(@RequestParam int productId){
         return ResponseEntity.ok(productService.getProductPrice(productId));
     }
